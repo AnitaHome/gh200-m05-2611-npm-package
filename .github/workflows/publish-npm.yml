@@ -1,0 +1,42 @@
+name: Publish npm Package
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# 關鍵權限宣告：賦予 GITHUB_TOKEN 寫入 Packages 與讀取儲存庫原始碼的權限
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      # 步驟 1：將原始碼檢出至空白虛擬機硬碟中
+      - name: 檢出原始碼
+        uses: actions/checkout@v4
+
+      # 步驟 2：設定 Node.js 24 環境並宣告 GitHub Packages 端點
+      - name: 設定 Node.js 環境
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
+
+      # 步驟 3：使用 npm ci 執行嚴格純淨安裝 (基於 package-lock.json)
+      - name: 安裝相依套件 (Clean Install)
+        run: npm ci
+
+      # 步驟 4：執行自動化單元測試，確保品質合規
+      - name: 執行單元測試
+        run: npm test
+
+      # 步驟 5：發布至 GitHub Packages (注入短效安全權杖)
+      - name: 發布套件至 GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
