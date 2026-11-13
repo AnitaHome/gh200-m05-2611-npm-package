@@ -19,7 +19,7 @@ jobs:
           curl -sSf -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GH_TOKEN" \
-            "https://api.github.com/repos/<OWNER>/<REPO_B>/dispatches" \
+            "https://api.github.com/repos/AnitaHome/GH200-M01-2611-skills-hello-github-actions/dispatches" \
             -d '{
               "event_type": "deploy-to-prod",
               "client_payload": {
