@@ -1,0 +1,15 @@
+{
+  "name": "@anitahome/string-utils",
+  "version": "1.0.0",
+  "description": "GH-200 實作示範：發布至 GitHub Packages 的共用字串工具函式庫",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test"
+  },
+ "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "keywords": ["github-packages", "gh-200", "npm"],
+  "author": "",
+  "license": "MIT"
+}
