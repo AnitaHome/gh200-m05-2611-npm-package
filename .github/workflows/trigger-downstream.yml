@@ -1,0 +1,29 @@
+name: Trigger Downstream Repo
+
+on:
+  # 實務上常搭配 push 或 workflow_run；此處加上手動觸發方便課堂實測
+  workflow_dispatch:
+
+jobs:
+  build-and-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 模擬上游專案建置完成
+        run: |
+          echo "Repo A 建置與封裝完成 (Commit: ${{ github.sha }})"
+
+      - name: 建置完成後觸發 Repo B 部署
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_PAT }}
+        run: |
+          curl -sSf -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/<OWNER>/<REPO_B>/dispatches" \
+            -d '{
+              "event_type": "deploy-to-prod",
+              "client_payload": {
+                "env": "production",
+                "version": "${{ github.sha }}"
+              }
+            }'
